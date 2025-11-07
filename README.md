@@ -597,6 +597,7 @@ ___
 The public IP address of your Broker (where prover-node and broker are running).
 Agents use this to locate the broker for job requests.
 
+
 - "AGENT_COUNT"
 The number of agent processes to run in parallel.
 Example: On a 192-core server, 25-30 agents is optimal.
