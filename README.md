@@ -564,7 +564,7 @@ mkdir -p ~/agents
 cd ~/agents
 ```
 
-### Allow required ports for agent communication
+### 🔥 Allow required ports for agent communication
 
 ```bash
 sudo ufw allow 22/tcp    
