@@ -591,21 +591,21 @@ AGENT_COUNT=30
 ___
 
 
-### Agents ".env" Variables
+### Agents `.env` Variables
 
-- "BROKER_IP"
+- `BROKER_IP`
 The public IP address of your Broker (where prover-node and broker are running).
 Agents use this to locate the broker for job requests.
 
 
-- "AGENT_COUNT"
+- `AGENT_COUNT`
 The number of agent processes to run in parallel.
 Example: On a 192-core server, 25-30 agents is optimal.
 
-- "PROVER_ID"
+- `PROVER_ID`
 The public prover address linked to your PROVER_PUBLISHER_PRIVATE_KEY on the broker.
 
-- "PROVER_BROKER_HOST"
+- `PROVER_BROKER_HOST`
 The full connection URL to your broker, including the port.
 Example: http://<BROKER_IP>:8081
 
