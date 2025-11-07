@@ -645,25 +645,25 @@ services:
 
 ___
 
-## ▶️ Run & Manage
+## 🚀 Run & Manage
 
-### Then, run the Prover + Broker (the first one)
+### ▶️ Then, run the Prover + Broker (the first one)
 
 ```bash
 docker compose up -d
 ```
 
-### Now go to the Agent NODE and also run that too
+### ▶️ Now go to the Agent NODE and also run that too
 ```bash
 docker compose up -d
 ```
-### Stop and remove containers (with volumes)
+### ⛔ Stop and remove containers (with volumes)
 
 ```bash
 docker compose down -v
 ```
 
-### Restart
+### 🔄 Restart
 
 ```bash
 docker compose down -v && docker compose up -d
@@ -673,12 +673,12 @@ ___
 
 ## 🔧 Useful Commands for Prover+Broker
 
-### Monitor the Prover logs
+### 🧾Monitor the Prover logs
 
 ```bash
 docker logs -f aztec-prover-prover-node-1
 ```
-### Check submitted proofs
+### ✅ Check submitted proofs
 
 ```bash
 docker logs -f aztec-prover-prover-node-1 2>&1 | grep --line-buffered -E 'Submitted'
@@ -686,25 +686,25 @@ docker logs -f aztec-prover-prover-node-1 2>&1 | grep --line-buffered -E 'Submit
 
 ## 🧰 Useful Command for Agents
 
-### See container status
+### 📊 See container status
 
 ```bash
 docker ps
 ```
 
-### Optional: Stop and remove containers (with volumes)
+### ⛔ Optional: Stop and remove containers (with volumes)
 ```bash
 docker compose down -v
 ```
-### Restart
+### 🔄 Restart
 ```bash
 docker compose down -v && docker compose up -d
 ```
-### Monitor Agent logs
+### 🧾 Monitor Agent logs
 ```bash
 docker logs -f aztec-agent-only-agent-1
 ```
-### Check agent-broker connection & job processing
+### ✅ Check agent-broker connection & job processing
 
 ```bash
 docker logs -f aztec-agent-only-agent-1 2>&1 | grep --line-buffered -E 'Connected to broker|Received job|Starting job|Submitting result'
@@ -717,7 +717,7 @@ ___
 
 It’s recommended to install some additional tools for monitoring your prover and agent servers.
 
-### Install "bpytop" (system resource monitor)
+### 📈Install "bpytop" (system resource monitor)
 
 ```bash
 sudo apt update
@@ -725,7 +725,7 @@ sudo apt install -y python3-pip
 sudo pip3 install bpytop
 ```
 
-### Run
+### ▶️ Run
 
 ```bash
 bpytop
