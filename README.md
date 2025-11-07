@@ -498,7 +498,7 @@ services:
       sh -c 'node --no-warnings /usr/src/yarn-project/aztec/dest/bin/index.js start --network alpha-testnet --archiver --prover-node'
 ```
 
-
+___
 
 # Step 2 — Set Up the Agents (Main Prover Rig)
  
@@ -584,6 +584,10 @@ BROKER_IP=IPAddressoftheBrokerNode
 AGENT_COUNT=30
 ```
 
+
+___
+
+
 ### Agents ".env" Variables
 
 "BROKER_IP"
@@ -601,14 +605,16 @@ The public prover address linked to your PROVER_PUBLISHER_PRIVATE_KEY on the bro
 The full connection URL to your broker, including the port.
 Example: http://<BROKER_IP>:8081
 
+___
 
-Creat a docker file with
+
+### Creat a docker file with
 
 ```bash
 nano docker-compose.yml
 ```
 
-## Paste on the docker compose of Agent
+### Paste on the docker compose of Agent
 ```bash
 name: aztec-agent-only
 services:
@@ -633,6 +639,9 @@ services:
       sh -c 'node --no-warnings /usr/src/yarn-project/aztec/dest/bin/index.js start --network alpha-testnet --prover-agent'
 
 ```
+
+___
+
 ## ▶️ Run & Manage
 
 ### Then, run the Prover + Broker (the first one)
@@ -656,6 +665,8 @@ docker compose down -v
 ```bash
 docker compose down -v && docker compose up -d
 ```
+
+___
 
 ## Useful Commands for Prover+Broker
 
@@ -695,6 +706,12 @@ docker logs -f aztec-agent-only-agent-1
 ```bash
 docker logs -f aztec-agent-only-agent-1 2>&1 | grep --line-buffered -E 'Connected to broker|Received job|Starting job|Submitting result'
 ```
+
+
+
+___
+
+
 
 
 ## 🛠 Extra Tooling for Monitoring
