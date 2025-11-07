@@ -322,7 +322,7 @@ Prover Node → fetches jobs, generates partial proofs, and submits final proofs
 ___
 
 
-## 1️⃣ Install Essentials
+### 1️⃣ Install Essentials
 
 On the Broker NODE (48c/256 GB), update and install the required packages:
 ```bash
@@ -343,19 +343,19 @@ sudo apt install -y \
     software-properties-common
 ```
 
-## Install dependencies
+### Install dependencies
 ```bash
 sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
 
-## Add Docker’s official GPG key
+### Add Docker’s official GPG key
 
 ```bash
 sudo mkdir -m 0755 -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
 sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 ```
-## Set up repository
+### Set up repository
 
 ```bash
 echo \
@@ -366,14 +366,14 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
-## Install Docker Engine & Compose
+### Install Docker Engine & Compose
 ```bash
 sudo apt update && \
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
 
-## Verify installation
+### Verify installation
 ```bash
 docker --version
 docker compose version
@@ -383,21 +383,21 @@ ___
 
 ##  2️⃣ 📥 Install Aztec CLI
 
-## Run the following command to install the Aztec CLI on your server:
+### Run the following command to install the Aztec CLI on your server:
 
 ```bash
 bash -i <(curl -s https://install.aztec.network)
 ```
-## Add the CLI to your shell’s PATH:
+### Add the CLI to your shell’s PATH:
 ```bash
 echo 'export PATH="$HOME/.aztec/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
-## You can verify installation with:
+### You can verify installation with:
 ```bash
 aztec --version 
 ```
-## Update AZTEC to latest
+### Update AZTEC to latest
 ```bash
 aztec-up latest
 ```
@@ -406,14 +406,14 @@ ___
 
 ## 3️⃣ Create Prover Directory & Configure Firewall
 
-## Create the Prover Directory
+### Create the Prover Directory
 
 This will hold your Docker Compose files, ".env", and data volumes:
 ```bash
 mkdir -p ~/broker
 cd ~/broker
 ```
-## Allow ports in UFW and enable
+### Allow ports in UFW and enable
 Open the necessary TCP and UDP ports for the broker, prover node, and SSH access:
 
 ```bash
@@ -426,14 +426,14 @@ sudo ufw allow 40400/udp
 ```bash
 sudo ufw enable
 ```
-## Create a .env file
+### Create a .env file
 
 ⚠️ Important: Do NOT reuse the same private key as your Sequencer Node — this will cause nonce conflicts.
 
 ```bash
 nano .env
 ```
-## Paste content in .env
+### Paste content in .env
 
 ```bash
 P2P_IP=
@@ -442,14 +442,14 @@ L1_CONSENSUS_HOST_URLS=
 PROVER_PUBLISHER_PRIVATE_KEY=
 PROVER_ID=
 ```
-## Create a docker-compose.yml file
+### Create a docker-compose.yml file
 
-## Creat a docker file with
+### Creat a docker file with
 ```bash
 nano docker-compose.yml
 ```
 
-## Paste content and save
+### Paste content and save
 ```bash
 name: aztec-prover
 services:
@@ -504,7 +504,7 @@ services:
  
 This server will run Prover Agents only, connecting to the Broker to receive proving jobs. [Remember,this is the NODE with 256GB+ RAMS]. 
 
-## 1️⃣ Install Essentials
+### 1️⃣ Install Essentials
 
 Update and install required packages:
 
@@ -525,7 +525,7 @@ sudo apt install -y \
     net-tools \
     software-properties-common
 ```
-## 2️⃣ Install Docker & Docker Compose
+### 2️⃣ Install Docker & Docker Compose
 
 
 ```bash
@@ -547,21 +547,21 @@ sudo apt update && \
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-## Verify installation
+### Verify installation
 
 ```bash
 docker --version
 docker compose version
 ```
 
-## 3️⃣ Create Agents Directory & Configure Firewall
+### 3️⃣ Create Agents Directory & Configure Firewall
 
 ```bash
 mkdir -p ~/agents
 cd ~/agents
 ```
 
-## Allow required ports for agent communication
+### Allow required ports for agent communication
 
 ```bash
 sudo ufw allow 22/tcp    
@@ -569,13 +569,13 @@ sudo ufw allow out 8081/tcp
 ```
 
 
-## 4️⃣ Create .env File
+### 4️⃣ Create .env File
 
 ```bash
 nano .env
 ```
 
-## Paste content in .env
+### Paste content in .env
 
 ```bash
 PROVER_ID=0xAddress
@@ -584,7 +584,7 @@ BROKER_IP=IPAddressoftheBrokerNode
 AGENT_COUNT=30
 ```
 
-## Agents ".env" Variables
+### Agents ".env" Variables
 
 "BROKER_IP"
 The public IP address of your Broker (where prover-node and broker are running).
@@ -635,23 +635,23 @@ services:
 ```
 ## ▶️ Run & Manage
 
-## Then, run the Prover + Broker (the first one)
+### Then, run the Prover + Broker (the first one)
 
 ```bash
 docker compose up -d
 ```
 
-## Now go to the Agent NODE and also run that too
+### Now go to the Agent NODE and also run that too
 ```bash
 docker compose up -d
 ```
-## Stop and remove containers (with volumes)
+### Stop and remove containers (with volumes)
 
 ```bash
 docker compose down -v
 ```
 
-## Restart
+### Restart
 
 ```bash
 docker compose down -v && docker compose up -d
@@ -659,12 +659,12 @@ docker compose down -v && docker compose up -d
 
 ## Useful Commands for Prover+Broker
 
-## Monitor the Prover logs
+### Monitor the Prover logs
 
 ```bash
 docker logs -f aztec-prover-prover-node-1
 ```
-## Check submitted proofs
+### Check submitted proofs
 
 ```bash
 docker logs -f aztec-prover-prover-node-1 2>&1 | grep --line-buffered -E 'Submitted'
@@ -672,25 +672,25 @@ docker logs -f aztec-prover-prover-node-1 2>&1 | grep --line-buffered -E 'Submit
 
 ## Useful Command for Agents
 
-## See container status
+### See container status
 
 ```bash
 docker ps
 ```
 
-## Optional: Stop and remove containers (with volumes)
+### Optional: Stop and remove containers (with volumes)
 ```bash
 docker compose down -v
 ```
-## Restart
+### Restart
 ```bash
 docker compose down -v && docker compose up -d
 ```
-## Monitor Agent logs
+### Monitor Agent logs
 ```bash
 docker logs -f aztec-agent-only-agent-1
 ```
-## Check agent-broker connection & job processing
+### Check agent-broker connection & job processing
 
 ```bash
 docker logs -f aztec-agent-only-agent-1 2>&1 | grep --line-buffered -E 'Connected to broker|Received job|Starting job|Submitting result'
@@ -701,7 +701,7 @@ docker logs -f aztec-agent-only-agent-1 2>&1 | grep --line-buffered -E 'Connecte
 
 It’s recommended to install some additional tools for monitoring your prover and agent servers.
 
-## Install "bpytop" (system resource monitor)
+### Install "bpytop" (system resource monitor)
 
 ```bash
 sudo apt update
