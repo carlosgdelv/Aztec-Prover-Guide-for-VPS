@@ -315,7 +315,7 @@ Open required ports on Broker Box:
 
 ___
 
-#   🚀 Step 1 — Set Up the Broker Node
+#   🚀 Step 1. Set Up the Broker Node
 This server will run two roles:
 
 Prover Broker → coordinates and assigns jobs to agents
@@ -325,7 +325,7 @@ Prover Node → fetches jobs, generates partial proofs, and submits final proofs
 ___
 
 
-### 1️⃣ Install Essentials
+###  Install Essentials
 
 On the Broker NODE (48c/256 GB), update and install the required packages:
 ```bash
@@ -346,19 +346,19 @@ sudo apt install -y \
     software-properties-common
 ```
 
-### Install dependencies
+### 📦 Install dependencies
 ```bash
 sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
 
-### Add Docker’s official GPG key
+### 🔐 Add Docker’s official GPG key
 
 ```bash
 sudo mkdir -m 0755 -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
 sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 ```
-### Set up repository
+### 🗂️ Set up repository
 
 ```bash
 echo \
@@ -369,14 +369,14 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
-### Install Docker Engine & Compose
+### 🐳 Install Docker Engine & Compose
 ```bash
 sudo apt update && \
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
 
-### Verify installation
+### ✅ Verify installation
 ```bash
 docker --version
 docker compose version
@@ -407,7 +407,7 @@ aztec-up latest
 
 ___
 
-## 3️⃣ Create Prover Directory & Configure Firewall
+##  3️⃣ 📁 Create Prover Directory & Configure Firewall
 
 ### Create the Prover Directory
 
@@ -445,7 +445,7 @@ L1_CONSENSUS_HOST_URLS=
 PROVER_PUBLISHER_PRIVATE_KEY=
 PROVER_ID=
 ```
-### Create a docker-compose.yml file
+### 🐳 Create a docker-compose.yml file
 
 ### Creat a docker file with
 ```bash
@@ -503,7 +503,7 @@ services:
 
 ___
 
-# Step 2 — Set Up the Agents (Main Prover Rig)
+# 🧠 Step 2 — Set Up the Agents (Main Prover Rig)
  
 This server will run Prover Agents only, connecting to the Broker to receive proving jobs. [Remember,this is the NODE with 256GB+ RAMS]. 
 
@@ -528,7 +528,7 @@ sudo apt install -y \
     net-tools \
     software-properties-common
 ```
-### 2️⃣ Install Docker & Docker Compose
+### 2️⃣ 🐳 Install Docker & Docker Compose
 
 
 ```bash
