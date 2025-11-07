@@ -325,7 +325,7 @@ Prover Node → fetches jobs, generates partial proofs, and submits final proofs
 ___
 
 
-###  Install Essentials
+### 🧱 Install Essentials
 
 On the Broker NODE (48c/256 GB), update and install the required packages:
 ```bash
@@ -409,14 +409,14 @@ ___
 
 ##  3️⃣ 📁 Create Prover Directory & Configure Firewall
 
-### Create the Prover Directory
+### 📁 Create the Prover Directory
 
 This will hold your Docker Compose files, ".env", and data volumes:
 ```bash
 mkdir -p ~/broker
 cd ~/broker
 ```
-### Allow ports in UFW and enable
+### 🔓Allow ports in UFW and enable
 Open the necessary TCP and UDP ports for the broker, prover node, and SSH access:
 
 ```bash
@@ -429,14 +429,14 @@ sudo ufw allow 40400/udp
 ```bash
 sudo ufw enable
 ```
-### Create a .env file
+### 🧾 Create a .env file
 
 ⚠️ Important: Do NOT reuse the same private key as your Sequencer Node — this will cause nonce conflicts.
 
 ```bash
 nano .env
 ```
-### Paste content in .env
+### 📋 Paste content in .env
 
 ```bash
 P2P_IP=
@@ -447,12 +447,12 @@ PROVER_ID=
 ```
 ### 🐳 Create a docker-compose.yml file
 
-### Creat a docker file with
+### Create a docker file with
 ```bash
 nano docker-compose.yml
 ```
 
-### Paste content and save
+### 💾 Paste content and save
 ```bash
 name: aztec-prover
 services:
@@ -611,13 +611,13 @@ Example: http://<BROKER_IP>:8081
 ___
 
 
-### Creat a docker file with
+### 🐳Create a docker file with
 
 ```bash
 nano docker-compose.yml
 ```
 
-### Paste on the docker compose of Agent
+### 🐳 Paste on the docker compose of Agent
 ```bash
 name: aztec-agent-only
 services:
