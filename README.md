@@ -3,17 +3,17 @@ Step-by-step deployment and operation guide for running Aztec provers on a VPS.
 
 ___
 
-Prover Stats: https://dune.com/rhum/aztec-nb-proofs-tx-new-rollup 
+- Prover Stats: https://dune.com/rhum/aztec-nb-proofs-tx-new-rollup 
 
-Telegram Prover bot: https://t.me/Aztec_prover_bot?start=_tgr_u7UubixkOGQ0…
+- Telegram Prover bot: https://t.me/Aztec_prover_bot?start=_tgr_u7UubixkOGQ0…
 
-Principal Guide: https://github.com/mztacat/Advanced-Guide-Prover-Set-up-on-Aztec?tab=readme-ov-file
+- Principal Guide: https://github.com/mztacat/Advanced-Guide-Prover-Set-up-on-Aztec?tab=readme-ov-file
 
-Second guide: https://github.com/Jaytechent/Aztec-Prover-Node-Guide?tab=readme-ov-file 
+- Second guide: https://github.com/Jaytechent/Aztec-Prover-Node-Guide?tab=readme-ov-file 
 
-Aztec Prover Explorer: https://aztec-prover-client.vercel.app/ 
+- Aztec Prover Explorer: https://aztec-prover-client.vercel.app/ 
 
-Computation rent: https://hostkey.com/dedicated-servers/instant/ 
+- Computation rent: https://hostkey.com/dedicated-servers/instant/ 
 
 ___
 
