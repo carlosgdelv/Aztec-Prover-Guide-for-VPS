@@ -550,7 +550,7 @@ sudo apt update && \
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-### Verify installation
+### ✅ Verify installation
 
 ```bash
 docker --version
@@ -671,7 +671,7 @@ docker compose down -v && docker compose up -d
 
 ___
 
-## Useful Commands for Prover+Broker
+## 🔧 Useful Commands for Prover+Broker
 
 ### Monitor the Prover logs
 
@@ -684,7 +684,7 @@ docker logs -f aztec-prover-prover-node-1
 docker logs -f aztec-prover-prover-node-1 2>&1 | grep --line-buffered -E 'Submitted'
 ```
 
-## Useful Command for Agents
+## 🧰 Useful Command for Agents
 
 ### See container status
 
@@ -710,11 +710,7 @@ docker logs -f aztec-agent-only-agent-1
 docker logs -f aztec-agent-only-agent-1 2>&1 | grep --line-buffered -E 'Connected to broker|Received job|Starting job|Submitting result'
 ```
 
-
-
 ___
-
-
 
 
 ## 🛠 Extra Tooling for Monitoring
