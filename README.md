@@ -30,16 +30,16 @@ ___
 ## Step 1. 🔧 Install Dependecies
 **Packages:**
 Refreshes the local package index and then upgrades all installed packages to their latest available versions without prompting for confirmation.
-```bash
+```sh
 sudo apt-get update && sudo apt-get upgrade -y
 ```
 This command installs a wide range of essential development tools, system utilities, and libraries required to build, run, and manage blockchain nodes and Docker-based environments on a Linux system.
-```bash
+```yaml
 sudo apt install curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev  -y
 ```
 **Docker:**
 The system is first updated and any previous Docker-related packages are removed to prevent conflicts. Then, necessary certificates and tools like `gnupg` are installed to securely add Docker’s official GPG key. A trusted keyring directory is created, and Docker’s repository is added to the system’s sources list. After updating the package list again, the official Docker Engine, CLI, and plugins are installed from Docker’s repository. Finally, Docker is tested with `hello-world`, enabled to start on boot, and restarted to ensure it runs properly.
-```bash
+```python
 sudo apt update -y && sudo apt upgrade -y
 for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
 
