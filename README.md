@@ -320,7 +320,7 @@ ___
 ## 1️⃣ Install Essentials
 
 On the Broker NODE (48c/256 GB), update and install the required packages:
-```json
+```bash
 sudo apt update && sudo apt upgrade -y && \
 sudo apt install -y \
     build-essential \
