@@ -312,6 +312,9 @@ Open required ports on Broker Box:
 8081 (TCP)
 40400 (TCP & UDP)
 
+
+___
+
 #   🚀 Step 1 — Set Up the Broker Node
 This server will run two roles:
 
@@ -726,7 +729,7 @@ sudo apt install -y python3-pip
 sudo pip3 install bpytop
 ```
 
-### RUN
+### Run
 
 ```bash
 bpytop
