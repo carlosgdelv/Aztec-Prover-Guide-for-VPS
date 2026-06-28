@@ -1,147 +1,1243 @@
-# Aztec-Prover-Guide-for-VPS
-Step-by-step deployment and operation guide for running Aztec provers on a VPS.
-
-___
-
-- Prover Stats: https://dune.com/rhum/aztec-nb-proofs-tx-new-rollup 
-
-- Telegram Prover bot: https://t.me/Aztec_prover_bot?start=_tgr_u7UubixkOGQ0…
-
-- Principal Guide: https://github.com/mztacat/Advanced-Guide-Prover-Set-up-on-Aztec?tab=readme-ov-file
-
-- Second guide: https://github.com/Jaytechent/Aztec-Prover-Node-Guide?tab=readme-ov-file 
-
-- Aztec Prover Explorer: https://aztec-prover-client.vercel.app/ 
-
-- Computation rent: https://hostkey.com/dedicated-servers/instant/ 
-
-___
 
 
+<div align="center">
 
+# 🖥️ Operating Systems & Node Infrastructure Handbook
 
+### Guía práctica de administración de sistemas, virtualización y despliegue de nodos blockchain (Ethereum L1 + Aztec L2)
 
+[![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)](#)
+[![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](#)
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](#)
+[![macOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)](#)
+[![WSL](https://img.shields.io/badge/WSL-0078D4?style=for-the-badge&logo=windows&logoColor=white)](#)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#)
+[![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white)](#)
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Maintained](https://img.shields.io/badge/maintained-yes-success.svg?style=flat-square)](#)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](#)
 
+</div>
 
+---
 
-___
+## 📖 Acerca de
 
-# ⟠  Eth-Prysm-node Mainnet
-Step by step guide for setting up a `docker-compose.yml` for running a `Sepolia` Ethereum full node using **Geth** as the `execution client` and **Prysm** as the `consensus client` on an Ubuntu-based system.
+Colección de comandos, procedimientos y guías de despliegue para administración de sistemas (**Linux**, **macOS**, **Windows/WSL**) y para operar infraestructura de nodos blockchain: un nodo Ethereum L1 (Geth + Prysm) y un prover de Aztec L2 sobre VPS.
 
-___
+> [!IMPORTANT]
+> Las secciones 8 y 9 (Geth/Prysm y Aztec Prover) involucran **claves privadas y fondos reales**. Cada bloque de versión incluye una nota de verificación con fecha y enlace a la fuente oficial. Antes de desplegar en mainnet, comprueba siempre la versión vigente en la documentación oficial enlazada — estos protocolos actualizan versiones con frecuencia.
 
-## Step 1. 🔧 Install Dependecies
-**Packages:**
-Refreshes the local package index and then upgrades all installed packages to their latest available versions without prompting for confirmation.
+---
+
+## 📑 Tabla de contenidos
+
+| # | Sección | Descripción |
+|---|---------|-------------|
+| 1 | [🪟 WSL](#-1-wsl--windows-subsystem-for-linux) | Instalación, gestión y configuración de recursos |
+| 2 | [🐧 Instalación Live de Linux](#-2-instalación-live-de-linux) | Creación de USB arrancable, verificación de ISO |
+| 3 | [🍎 macOS](#-3-macos) | Homebrew, gestión de discos, Docker y equivalencias con Linux |
+| 4 | [💾 Almacenamiento y LVM](#-4-almacenamiento-y-lvm) | Diagnóstico, extensión y reducción de volúmenes |
+| 5 | [🔍 Monitorización del sistema](#-5-monitorización-del-sistema) | CPU, disco, red, logs y contenedores |
+| 6 | [🐳 Docker](#-6-docker) | Contenedores, Compose, volúmenes, imágenes y redes |
+| 7 | [🛠️ Herramientas generales de sistema](#-7-herramientas-generales-de-sistema) | SSH, tmux, rsync, cron, firewall |
+| 8 | [⟠ Nodo Ethereum L1 — Geth + Prysm](#-8-nodo-ethereum-l1--geth--prysm) | Execution + consensus client con Docker Compose |
+| 9 | [🌳 Aztec Prover — Broker + Agents](#-9-aztec-prover--broker--agents) | Arquitectura distribuida de prueba en VPS |
+
+---
+
+## 🪟 1. WSL — Windows Subsystem for Linux
+
+> Instalación, gestión de distribuciones y configuración de recursos de WSL en Windows.
+
+### 1.1 Instalación inicial
+
+**Paso 1 — Instalar WSL**
+
+```bash
+wsl --install
+```
+
+**Paso 2 — Reiniciar el equipo**
+
+Necesario para que se completen la instalación de WSL y las actualizaciones del kernel.
+
+```text
+(Reinicia tu PC)
+```
+
+**Paso 3 — Listar distribuciones disponibles**
+
+```bash
+wsl --list --online
+```
+
+**Paso 4 — Instalar Ubuntu 24.04**
+
+```bash
+wsl --install -d Ubuntu-24.04
+```
+
+**Paso 5 — Abrir una shell interactiva en Ubuntu 24.04**
+
+```bash
+wsl -d Ubuntu-24.04
+```
+
+O, de forma abreviada (abre la distribución por defecto):
+
+```bash
+wsl
+```
+
+---
+
+### 1.2 Gestión de distribuciones
+
+**Listar distribuciones instaladas y su estado**
+
+```bash
+wsl --list --verbose
+```
+
+**Establecer una distribución como predeterminada**
+
+```bash
+wsl --set-default Ubuntu-24.04
+```
+
+**Apagar todas las instancias de WSL**
+
+Útil cuando WSL consume demasiada RAM o tras cambiar la configuración de `.wslconfig`.
+
+```bash
+wsl --shutdown
+```
+
+**Apagar una distribución concreta**
+
+```bash
+wsl --terminate Ubuntu-24.04
+```
+
+---
+
+### 1.3 Backup y migración de una distribución
+
+**Exportar una distribución a un archivo `.tar`**
+
+```bash
+wsl --export Ubuntu-24.04 backup-ubuntu.tar
+```
+
+**Importar una distribución desde un backup**
+
+```bash
+wsl --import Ubuntu-24.04-Restored C:\WSL\Ubuntu-24.04-Restored backup-ubuntu.tar
+```
+
+---
+
+### 1.4 Acceso a archivos entre Windows y Linux
+
+**Acceder al sistema de archivos de Windows desde WSL**
+
+```bash
+cd /mnt/c/Users/<tu_usuario>
+```
+
+**Acceder al sistema de archivos de WSL desde Windows**
+
+Desde el Explorador de archivos de Windows, escribe en la barra de direcciones:
+
+```text
+\\wsl$\Ubuntu-24.04\
+```
+
+---
+
+### 1.5 Configuración de recursos (`.wslconfig`)
+
+> Limita la RAM y CPU que WSL2 puede consumir en el sistema anfitrión. Edita o crea el archivo en `C:\Users\<tu_usuario>\.wslconfig`.
+
+```ini
+[wsl2]
+memory=8GB
+processors=4
+swap=2GB
+```
+
+Tras editarlo, aplica los cambios con:
+
+```bash
+wsl --shutdown
+```
+
+---
+
+## 🐧 2. Instalación Live de Linux
+
+> Procedimiento para crear un USB arrancable con una distribución Linux (ejemplo: Ubuntu 24.04).
+
+> [!CAUTION]
+> El comando `dd` escribe a nivel de bloque y **borra todo el contenido del disco de destino sin posibilidad de deshacerlo**. Verifica el dispositivo (`/dev/sdX`) con `lsblk -fp` antes de cada paso. Un error de dispositivo puede destruir tu disco principal.
+
+### 2.1 Detectar y preparar el USB
+
+**Paso 1 — Detectar la ruta del USB**
+
+```bash
+lsblk -fp
+```
+
+**Paso 2 — Desmontar el USB (si está montado)**
+
+```bash
+sudo umount /dev/sda1
+sudo umount /dev/sda2
+```
+
+**Paso 3 — Borrar la tabla de particiones del USB**
+
+> ⚠️ Solo el USB, nunca tu SSD/disco principal.
+
+```bash
+sudo wipefs -a /dev/sda
+```
+
+---
+
+### 2.2 Descargar y verificar la imagen ISO
+
+**Paso 4 — Descargar una ISO de Linux**
+
+Ejemplo con Ubuntu 24.04:
+
+```bash
+wget https://releases.ubuntu.com/24.04/ubuntu-24.04-desktop-amd64.iso -O ubuntu.iso
+```
+
+**Paso 5 — Verificar la integridad de la ISO**
+
+Antes de grabar la imagen, comprueba que no está corrupta ni manipulada comparando su checksum con el oficial publicado por Ubuntu.
+
+```bash
+sha256sum ubuntu.iso
+```
+
+Compara el resultado con el valor publicado en [releases.ubuntu.com](https://releases.ubuntu.com/24.04/SHA256SUMS).
+
+---
+
+### 2.3 Grabar la ISO en el USB
+
+**Paso 6 — Escribir la ISO en el USB**
+
+```bash
+sudo dd if=ubuntu.iso of=/dev/sda bs=4M status=progress oflag=sync
+```
+
+> 💡 **Alternativa con barra de progreso (`pv`)**: si prefieres una barra de progreso más detallada que `status=progress`, puedes canalizar la escritura a través de `pv`:
+>
+> ```bash
+> sudo apt install pv -y
+> pv ubuntu.iso | sudo dd of=/dev/sda bs=4M oflag=sync
+> ```
+
+> 💡 **Alternativa sin terminal**: si prefieres una herramienta gráfica, puedes usar **[Rufus](https://rufus.ie/)** (solo Windows) o **[balenaEtcher](https://etcher.balena.io/)** (Windows/macOS/Linux), ambas gratuitas y pensadas para crear USBs arrancables de forma guiada.
+
+**Paso 7 — Sincronizar y expulsar**
+
+```bash
+sync
+sudo eject /dev/sda
+```
+
+Ya puedes retirar el USB de forma segura.
+
+---
+
+### 2.4 Comprobación final
+
+Al ejecutar de nuevo `lsblk -fp` deberías ver algo similar a:
+
+```text
+/dev/sda iso9660 Ubuntu 24.04 amd64
+```
+
+---
+
+## 🍎 3. macOS
+
+> Gestión de paquetes, discos, virtualización y equivalencias de comandos para usuarios de macOS.
+
+### 3.1 Homebrew — gestor de paquetes
+
+**Instalar Homebrew**
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+**Actualizar la lista de paquetes disponibles**
+
+```bash
+brew update
+```
+
+**Actualizar todos los paquetes instalados**
+
+```bash
+brew upgrade
+```
+
+**Instalar un paquete**
+
+```bash
+brew install <paquete>
+```
+
+**Instalar una aplicación gráfica (Cask)**
+
+```bash
+brew install --cask <aplicación>
+```
+
+**Listar paquetes instalados**
+
+```bash
+brew list
+```
+
+**Desinstalar un paquete**
+
+```bash
+brew uninstall <paquete>
+```
+
+**Limpiar versiones antiguas y caché de descargas**
+
+```bash
+brew cleanup
+```
+
+**Diagnosticar problemas de instalación**
+
+```bash
+brew doctor
+```
+
+---
+
+### 3.2 Gestión de discos y particiones (`diskutil`)
+
+**Listar todos los discos y particiones conectados**
+
+Equivalente macOS de `lsblk -fp` en Linux.
+
+```bash
+diskutil list
+```
+
+**Ver información detallada de un disco**
+
+```bash
+diskutil info /dev/disk2
+```
+
+**Desmontar un disco completo (todas sus particiones)**
+
+```bash
+diskutil unmountDisk /dev/disk2
+```
+
+**Borrar y formatear un disco/USB**
+
+```bash
+diskutil eraseDisk FAT32 USBDRIVE MBR /dev/disk2
+```
+
+**Expulsar un disco de forma segura**
+
+```bash
+diskutil eject /dev/disk2
+```
+
+---
+
+### 3.3 Crear un USB arrancable en macOS
+
+> [!CAUTION]
+> Igual que en Linux, `dd` en macOS escribe a bajo nivel y **borra todo el contenido del disco de destino**. En macOS los discos se identifican como `/dev/diskN` (no `/dev/sdX`). Usa siempre el disco completo (`rdiskN`) en lugar de una partición (`diskNs1`) para mayor velocidad.
+
+**Paso 1 — Identificar el disco USB**
+
+```bash
+diskutil list
+```
+
+**Paso 2 — Desmontar el disco**
+
+```bash
+diskutil unmountDisk /dev/disk2
+```
+
+**Paso 3 — Escribir la imagen ISO/IMG en el USB**
+
+Usar `r` antes del nombre del disco (`rdisk2`) accede al dispositivo en modo "raw", mucho más rápido que `disk2`.
+
+```bash
+sudo dd if=ubuntu.iso of=/dev/rdisk2 bs=4m status=progress
+```
+
+**Paso 4 — Expulsar el disco**
+
+```bash
+diskutil eject /dev/disk2
+```
+
+---
+
+### 3.4 Docker en macOS
+
+> macOS no tiene soporte nativo de contenedores Linux: Docker Desktop (o sus alternativas) levantan una máquina virtual ligera por debajo.
+
+**Instalar Docker Desktop vía Homebrew**
+
+```bash
+brew install --cask docker
+```
+
+**Alternativa ligera a Docker Desktop: Colima**
+
+[Colima](https://github.com/abiosoft/colima) ofrece un runtime de contenedores en macOS sin la sobrecarga de Docker Desktop, usando la CLI estándar de Docker.
+
+```bash
+brew install colima docker
+colima start
+```
+
+**Verificar que el motor de Docker está activo**
+
+```bash
+docker info
+```
+
+**Detener el entorno de Colima**
+
+```bash
+colima stop
+```
+
+> 💡 Todos los comandos de la sección [🐳 Docker](#-6-docker) funcionan igual en macOS una vez que Docker Desktop o Colima están en ejecución.
+
+---
+
+### 3.5 Equivalencias de comandos Linux ↔ macOS
+
+> macOS usa utilidades BSD en lugar de GNU; algunos comandos habituales en Linux no existen o se comportan de forma distinta.
+
+| Tarea | Linux | macOS |
+|-------|-------|-------|
+| Listar discos/particiones | `lsblk -fp` | `diskutil list` |
+| Monitor de procesos interactivo | `htop` | `htop` (vía `brew install htop`) o `top` |
+| Información de memoria | `free -h` | `vm_stat` o `top -l 1` |
+| Buscar archivos por nombre | `find . -name "*.txt"` | `find . -name "*.txt"` (igual) |
+| Ver puertos abiertos | `ss -tulpn` | `lsof -i -P` |
+| Editar variables de entorno persistentes | `~/.bashrc` / `~/.profile` | `~/.zshrc` (zsh es el shell por defecto) |
+| Copiar al portapapeles | `xclip` | `pbcopy` |
+| Pegar desde el portapapeles | `xclip -o` | `pbpaste` |
+| Gestor de paquetes | `apt` / `dnf` / `pacman` | `brew` |
+| Información del sistema | `uname -a` / `lscpu` | `system_profiler SPHardwareDataType` |
+
+---
+
+### 3.6 Gestión de servicios (`launchctl`)
+
+> macOS usa `launchd` en lugar de `systemd`. Es el equivalente a `systemctl` en Linux.
+
+**Listar todos los servicios/daemons cargados**
+
+```bash
+launchctl list
+```
+
+**Cargar un servicio**
+
+```bash
+launchctl load ~/Library/LaunchAgents/com.ejemplo.servicio.plist
+```
+
+**Descargar (detener) un servicio**
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.ejemplo.servicio.plist
+```
+
+---
+
+### 3.7 Mantenimiento y limpieza del sistema
+
+**Ver espacio en disco**
+
+```bash
+df -h
+```
+
+**Analizar visualmente qué ocupa espacio (requiere Homebrew)**
+
+```bash
+brew install ncdu
+ncdu /
+```
+
+**Vaciar la papelera desde terminal**
+
+```bash
+rm -rf ~/.Trash/*
+```
+
+**Reparar permisos y verificar el disco de arranque**
+
+```bash
+diskutil verifyVolume /
+```
+
+---
+
+### 3.8 macOS como plataforma para nodos Aztec
+
+> [!NOTE]
+> ✅ **Verificado (28 jun 2026)** — La documentación oficial de Aztec confirma soporte explícito para macOS como sistema operativo válido para correr nodos: *"The node software can be run on any Unix system released after 2020: Linux (common flavors), macOS (ARM and Intel)"*. Fuente: [docs.aztec.network/operate/operators/prerequisites](https://docs.aztec.network/operate/operators/prerequisites).
+
+**Requisito previo: Bash moderno**
+
+macOS trae de fábrica Bash 3.2 (muy antiguo), lo cual causa problemas con el instalador oficial de Aztec, que invoca `bash` explícitamente aunque tu shell por defecto sea `zsh`.
+
+```bash
+brew install bash
+```
+
+Si el instalador sigue detectando la versión antigua, añade el Bash de Homebrew a tu `$PATH` o configúralo como shell por defecto.
+
+**Instalar Docker Desktop (requisito para correr nodos)**
+
+```bash
+brew install --cask docker
+```
+
+> En macOS, Docker Desktop incluye Docker Compose integrado — no es necesario instalarlo por separado, a diferencia de Linux.
+
+---
+
+## 💾 4. Almacenamiento y LVM
+
+> Diagnóstico previo, extensión y reducción de volúmenes lógicos (LVM) sobre discos físicos en una VM Linux.
+
+### 4.1 Diagnóstico previo (antes de tocar nada)
+
+**Listar discos, particiones y puntos de montaje**
+
+```bash
+lsblk -fp
+```
+
+**Listar particiones con detalle (tabla de particiones, tamaños, tipos)**
+
+```bash
+sudo fdisk -l
+```
+
+---
+
+### 4.2 Extender un volumen lógico (añadir disco nuevo)
+
+**Paso 1 — Actualizar el sistema e instalar herramientas LVM**
+
+```bash
+sudo apt update
+sudo apt install lvm2 -y
+```
+
+**Paso 2 — Borrar datos y preparar el nuevo disco**
+
+Elimina cualquier dato de sistema de archivos/particiones existente e inicializa el disco como volumen físico.
+
+```bash
+sudo wipefs --all /dev/nvme1n1
+sudo sgdisk --zap-all /dev/nvme1n1
+sudo pvcreate /dev/nvme1n1
+```
+
+**Paso 3 — Añadir el nuevo disco al grupo de volúmenes**
+
+Extiende el grupo de volúmenes (`ubuntu-vg`) para incluir el nuevo disco.
+
+```bash
+sudo vgextend ubuntu-vg /dev/nvme1n1
+```
+
+**Paso 4 — Confirmar los cambios en el grupo de volúmenes**
+
+```bash
+sudo vgs
+```
+
+**Paso 5 — Extender el volumen lógico con todo el espacio libre**
+
+```bash
+sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+```
+
+**Paso 6 — Redimensionar el sistema de archivos**
+
+```bash
+sudo resize2fs /dev/ubuntu-vg/ubuntu-lv
+```
+
+**Paso 7 — Verificar los cambios**
+
+```bash
+df -h /
+df -T /
+```
+
+**Paso 8 — (Opcional) Ver detalle del volumen lógico**
+
+```bash
+sudo lvdisplay /dev/ubuntu-vg/ubuntu-lv
+```
+
+---
+
+### 4.3 Reducir un volumen lógico
+
+> [!WARNING]
+> Reducir un volumen es una operación de riesgo: si el nuevo tamaño es menor que los datos existentes, **se pierden datos**. Haz siempre una copia de seguridad antes y verifica el sistema de archivos en cada paso.
+
+**Paso 1 — Desmontar el volumen**
+
+No se puede reducir un sistema de archivos `ext4` en caliente.
+
+```bash
+sudo umount /dev/ubuntu-vg/ubuntu-lv
+```
+
+**Paso 2 — Verificar el sistema de archivos**
+
+```bash
+sudo e2fsck -f /dev/ubuntu-vg/ubuntu-lv
+```
+
+**Paso 3 — Reducir primero el sistema de archivos**
+
+Reduce el filesystem a un tamaño *menor o igual* al que tendrá el volumen lógico (ejemplo: 20 GB).
+
+```bash
+sudo resize2fs /dev/ubuntu-vg/ubuntu-lv 20G
+```
+
+**Paso 4 — Reducir el volumen lógico**
+
+```bash
+sudo lvreduce -L 20G /dev/ubuntu-vg/ubuntu-lv
+```
+
+**Paso 5 — Volver a montar el volumen**
+
+```bash
+sudo mount /dev/ubuntu-vg/ubuntu-lv
+```
+
+---
+
+### 4.4 Gestión gráfica de particiones (alternativa)
+
+Para quien prefiera una interfaz visual en lugar de la terminal:
+
+```bash
+sudo apt install gparted -y
+sudo gparted
+```
+
+---
+
+## 🔍 5. Monitorización del sistema
+
+> Comandos para vigilar el uso de CPU, memoria, disco, red, logs y contenedores específicos.
+
+### 5.1 CPU y memoria
+
+**Monitor interactivo de procesos (CPU, memoria, usuario)**
+
+```bash
+htop
+```
+
+**Resumen de memoria RAM y swap**
+
+```bash
+free -h
+```
+
+---
+
+### 5.2 Disco
+
+**Uso de disco por sistema de archivos**
+
+```bash
+df -h
+```
+
+**Explorador visual interactivo de uso de disco (más cómodo que `du`)**
+
+```bash
+sudo apt install ncdu -y
+ncdu /
+```
+
+**Uso de disco por proceso, en tiempo real**
+
+```bash
+sudo apt install iotop -y
+sudo iotop
+```
+
+---
+
+### 5.3 Red
+
+**Uso de red por proceso, en tiempo real**
+
+```bash
+sudo apt install nethogs -y
+sudo nethogs
+```
+
+**Tráfico de red por interfaz, en tiempo real (estilo `top`)**
+
+```bash
+sudo apt install iftop -y
+sudo iftop
+```
+
+---
+
+### 5.4 Logs del sistema
+
+**Ver logs del sistema en tiempo real (systemd)**
+
+```bash
+journalctl -f
+```
+
+**Ver logs de un servicio concreto**
+
+```bash
+journalctl -u <nombre-del-servicio> -f
+```
+
+---
+
+### 5.5 Monitorización de contenedores específicos del nodo
+
+**Uso de disco — contenedor Geth**
+
+```bash
+docker exec -it geth du -sh /data
+```
+
+**Uso de disco — contenedor Prysm**
+
+```bash
+docker exec -it prysm du -sh /data
+```
+
+**Uso de disco — contenedor de Aztec**
+
+```bash
+docker exec -it aztec-prover-prover-node-1 du -sh /var/lib/data
+```
+
+---
+
+## 🐳 6. Docker
+
+> Comandos esenciales para el día a día con contenedores, Docker Compose, volúmenes, imágenes y redes.
+
+### 6.1 Contenedores
+
+| Comando | Descripción |
+|---------|-------------|
+| `docker ps` | Muestra todos los contenedores en ejecución. |
+| `docker ps -a` | Lista todos los contenedores, incluidos los detenidos. |
+| `docker stats` | Métricas en tiempo real: CPU, memoria, red y disco. |
+| `docker logs <id\|nombre>` | Muestra los logs de un contenedor. |
+| `docker stop <id\|nombre>` | Detiene un contenedor en ejecución de forma ordenada. |
+| `docker rm <id\|nombre>` | Elimina permanentemente un contenedor. |
+| `docker container prune` | Elimina todos los contenedores detenidos para liberar espacio. |
+
+**Ver contenedores activos**
+
+```bash
+docker ps
+```
+
+**Listar todos los contenedores (incluidos los detenidos)**
+
+```bash
+docker ps -a
+```
+
+**Métricas en tiempo real**
+
+```bash
+docker stats
+```
+
+**Ver logs de un contenedor**
+
+Útil para depurar un nodo (geth, prysm, aztec, etc.) sin entrar dentro del contenedor.
+
+```bash
+docker logs -f geth
+```
+
+**Detener un contenedor**
+
+```bash
+docker stop <container_id_or_name>
+```
+
+**Eliminar un contenedor**
+
+```bash
+docker rm <container_id_or_name>
+```
+
+**Eliminar todos los contenedores detenidos**
+
+```bash
+docker container prune
+```
+
+---
+
+### 6.2 Docker Compose
+
+> Gestión de servicios multi-contenedor definidos en un `docker-compose.yml` (típico cuando hay varios nodos como geth, prysm y aztec en el mismo stack).
+
+**Levantar todos los servicios en segundo plano**
+
+```bash
+docker compose up -d
+```
+
+**Detener y eliminar todos los servicios del stack**
+
+```bash
+docker compose down
+```
+
+**Ver logs de todos los servicios del stack**
+
+```bash
+docker compose logs -f
+```
+
+**Reiniciar un servicio concreto**
+
+```bash
+docker compose restart <nombre_servicio>
+```
+
+---
+
+### 6.3 Volúmenes
+
+**Listar volúmenes**
+
+```bash
+docker volume ls
+```
+
+**Eliminar volúmenes no utilizados**
+
+> [!WARNING]
+> Esto borra de forma permanente los datos de cualquier volumen que no esté en uso por un contenedor activo.
+
+```bash
+docker volume prune
+```
+
+---
+
+### 6.4 Imágenes
+
+**Listar imágenes descargadas**
+
+```bash
+docker images
+```
+
+**Eliminar todas las imágenes no utilizadas por ningún contenedor**
+
+```bash
+docker image prune -a
+```
+
+---
+
+### 6.5 Redes
+
+**Listar redes de Docker**
+
+```bash
+docker network ls
+```
+
+---
+
+### 6.6 Desinstalación completa de Docker
+
+> [!WARNING]
+> Esto elimina Docker y **todos los datos** asociados (imágenes, volúmenes, contenedores) de forma irreversible.
+
+```bash
+sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd
+```
+
+---
+
+## 🛠️ 7. Herramientas generales de sistema
+
+> Utilidades transversales para trabajo con servidores remotos, transferencia de archivos, automatización y seguridad básica.
+
+### 7.1 SSH — acceso remoto
+
+**Generar un par de claves SSH**
+
+```bash
+ssh-keygen -t ed25519 -C "tu_email@ejemplo.com"
+```
+
+**Copiar la clave pública a un servidor remoto**
+
+```bash
+ssh-copy-id usuario@servidor
+```
+
+**Conectarse a un servidor remoto**
+
+```bash
+ssh usuario@servidor
+```
+
+**Conectarse usando un puerto distinto al 22**
+
+```bash
+ssh -p 2222 usuario@servidor
+```
+
+---
+
+### 7.2 tmux — sesiones persistentes
+
+> Permite mantener procesos corriendo en un servidor remoto aunque se cierre la conexión SSH.
+
+**Crear una nueva sesión con nombre**
+
+```bash
+tmux new -s nombre_sesion
+```
+
+**Listar sesiones activas**
+
+```bash
+tmux ls
+```
+
+**Desconectarse de la sesión sin cerrarla**
+
+Atajo de teclado dentro de tmux:
+
+```text
+Ctrl + b, luego d
+```
+
+**Volver a conectarse a una sesión existente**
+
+```bash
+tmux attach -t nombre_sesion
+```
+
+**Cerrar una sesión por completo**
+
+```bash
+tmux kill-session -t nombre_sesion
+```
+
+---
+
+### 7.3 rsync — transferencia y backup de archivos
+
+**Copiar una carpeta local a un servidor remoto**
+
+```bash
+rsync -avz /ruta/local/ usuario@servidor:/ruta/remota/
+```
+
+**Copiar desde un servidor remoto a local**
+
+```bash
+rsync -avz usuario@servidor:/ruta/remota/ /ruta/local/
+```
+
+**Sincronizar borrando en destino lo que ya no existe en origen**
+
+> [!CAUTION]
+> La opción `--delete` elimina en destino los archivos que ya no estén en origen. Revisa siempre antes con `--dry-run`.
+
+```bash
+rsync -avz --delete --dry-run /ruta/local/ usuario@servidor:/ruta/remota/
+```
+
+---
+
+### 7.4 cron — tareas programadas
+
+**Editar las tareas programadas del usuario actual**
+
+```bash
+crontab -e
+```
+
+**Listar las tareas programadas actuales**
+
+```bash
+crontab -l
+```
+
+**Ejemplo: ejecutar un script todos los días a las 3:00 AM**
+
+```cron
+0 3 * * * /ruta/al/script.sh
+```
+
+---
+
+### 7.5 ufw — firewall básico (Ubuntu)
+
+**Activar el firewall**
+
+```bash
+sudo ufw enable
+```
+
+**Ver el estado y las reglas activas**
+
+```bash
+sudo ufw status verbose
+```
+
+**Permitir un puerto concreto (ejemplo: SSH)**
+
+```bash
+sudo ufw allow 22/tcp
+```
+
+**Denegar un puerto concreto**
+
+```bash
+sudo ufw deny 8080/tcp
+```
+
+**Eliminar una regla**
+
+```bash
+sudo ufw delete allow 22/tcp
+```
+
+---
+
+## ⟠ 8. Nodo Ethereum L1 — Geth + Prysm
+
+> Despliegue de un nodo completo de Ethereum mainnet usando **Geth** como execution client y **Prysm** como consensus client, vía Docker Compose en Ubuntu.
+
+> [!NOTE]
+> ✅ **Verificado (28 jun 2026)**
+> - Geth: última serie estable **v1.17.x** (release reciente v1.17.3). Hard fork **Fusaka** activado en mainnet el 3 dic 2025. Fuente: [github.com/ethereum/go-ethereum/releases](https://github.com/ethereum/go-ethereum/releases)
+> - Prysm: el proyecto **se renombró de `prysmaticlabs` a `OffchainLabs`**. Última versión estable **v7.1.3** (marzo 2026). La imagen Docker oficial ahora es `gcr.io/offchainlabs/prysm/beacon-chain` (la antigua `gcr.io/prysmaticlabs/...` sigue funcionando pero será descontinuada). Fuente: [prysm.offchainlabs.com](https://prysm.offchainlabs.com/docs/install-prysm/install-with-docker/) y [github.com/OffchainLabs/prysm/issues/15139](https://github.com/OffchainLabs/prysm/issues/15139)
+> - Ambos proyectos recomiendan usar el tag **`:stable`** en lugar de fijar un número de versión a mano, para recibir parches de seguridad automáticamente.
+
+### 8.1 Instalar dependencias del sistema
+
+**Actualizar el sistema**
+
 ```bash
 sudo apt-get update && sudo apt-get upgrade -y
 ```
-This command installs a wide range of essential development tools, system utilities, and libraries required to build, run, and manage blockchain nodes and Docker-based environments on a Linux system.
+
+**Instalar paquetes esenciales de desarrollo y utilidades**
+
 ```bash
-sudo apt install curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev  -y
+sudo apt install curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip -y
 ```
-**Docker:**
-The system is first updated and any previous Docker-related packages are removed to prevent conflicts. Then, necessary certificates and tools like `gnupg` are installed to securely add Docker’s official GPG key. A trusted keyring directory is created, and Docker’s repository is added to the system’s sources list. After updating the package list again, the official Docker Engine, CLI, and plugins are installed from Docker’s repository. Finally, Docker is tested with `hello-world`, enabled to start on boot, and restarted to ensure it runs properly.
+
+---
+
+### 8.2 Instalar Docker Engine
+
+**Eliminar versiones previas en conflicto**
+
 ```bash
 sudo apt update -y && sudo apt upgrade -y
 for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
+```
 
+**Añadir la clave GPG oficial de Docker**
+
+```bash
 sudo apt-get update
 sudo apt-get install ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
 
+**Añadir el repositorio de Docker**
+
+```bash
 echo \
   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
 
+**Instalar Docker Engine, CLI y plugins**
+
+```bash
 sudo apt update -y && sudo apt upgrade -y
-
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
 
-# Test Docker
+**Probar la instalación**
+
+```bash
 sudo docker run hello-world
+```
 
+**Habilitar Docker al arranque y reiniciar el servicio**
+
+```bash
 sudo systemctl enable docker
 sudo systemctl restart docker
 ```
 
-
 ---
 
-## Step 2. 👤➕🐳 Add Your User to the Docker Group
+### 8.3 Añadir tu usuario al grupo Docker
 
-It must show "carlos"
+> Permite ejecutar comandos `docker` sin necesidad de `sudo`.
+
+**Verificar tu nombre de usuario**
+
 ```bash
 whoami
-```  
-It must show "1000"
+```
+
+**Verificar tu UID (debe mostrar 1000 si eres el primer usuario)**
+
 ```bash
 id -u
 ```
-It must show "1000"
+
+**Verificar tu GID**
+
 ```bash
-id -g        
+id -g
 ```
-It should say: groupadd: the group "docker" already exists
+
+**Crear el grupo docker (si no existe ya)**
+
 ```bash
 sudo groupadd docker
 ```
-The following command adds the user carlos to the docker group so they can use Docker without sudo
+
+**Añadir tu usuario al grupo docker**
+
+Sustituye `carlos` por tu nombre de usuario real.
+
 ```bash
 sudo usermod -aG docker carlos
 ```
-Restart the session or the system
+
+**Reiniciar sesión o el sistema para aplicar el cambio**
+
 ```bash
 reboot
 ```
 
+---
 
-## Step 3. 📁 Create Directories
-These commands create the necessary directory structure for Ethereum's execution and consensus clients under the user's home directory (`~/ethereum`):
+### 8.4 Crear la estructura de directorios
+
 ```bash
 mkdir -p ~/ethereum-mainnet/execution ~/ethereum-mainnet/consensus
 ```
 
 ---
 
-## Step 4. 🔐 Generate the JWT secret:
-Generates a 32-byte random JWT secret in hexadecimal format and saves it to a file used for secure communication between clients.
+### 8.5 Generar el secreto JWT
+
+> El JWT secret autentica la comunicación entre el execution client (Geth) y el consensus client (Prysm) a través del Engine API.
+
+**Generar un secreto JWT de 32 bytes en hexadecimal**
 
 ```bash
 openssl rand -hex 32 > ~/ethereum-mainnet/jwt.hex
 ```
 
-Protect the JWT secret with strict permissions
+**Proteger el archivo con permisos restrictivos**
+
 ```bash
-chmod 600 /home/carlos/ethereum-mainnet/jwt.hex
+chmod 600 ~/ethereum-mainnet/jwt.hex
 ```
 
-Prints the contents of the jwt.hex file to verify it was correctly generated.
+**Verificar que se generó correctamente**
+
 ```bash
 cat ~/ethereum-mainnet/jwt.hex
 ```
 
 ---
 
-## Step 5. 🐳 Configure `docker-compose.yml`
-Changes the current working directory to the `ethereum` folder where you will place the `docker-compose.yml ` configuration.
+### 8.6 Configurar `docker-compose.yml`
+
+**Cambiar al directorio de trabajo**
+
 ```bash
-cd ~/ethereum
+cd ~/ethereum-mainnet
 ```
-Opens a new or existing `docker-compose.yml` file in the Nano text editor to write or edit the service definitions.
+
+**Abrir/crear el archivo de configuración**
+
 ```bash
 nano docker-compose.yml
 ```
-Replace the following code into your `docker-compose.yml` file:
+
+**Contenido del `docker-compose.yml`**
+
+> 💡 Se usa el tag `stable` en ambas imágenes en lugar de una versión fija, siguiendo la recomendación oficial de ambos proyectos para recibir actualizaciones de seguridad automáticamente. Sustituye `carlos` por tu usuario real en las rutas de volúmenes.
+
 ```yaml
 services:
   geth:
-    image: ethereum/client-go:v1.16.4
+    image: ethereum/client-go:stable
     container_name: geth
     network_mode: host
     user: "1000:1000"
@@ -175,7 +1271,7 @@ services:
         max-file: "3"
 
   prysm:
-    image: gcr.io/prysmaticlabs/prysm/beacon-chain:v6.1.2
+    image: gcr.io/offchainlabs/prysm/beacon-chain:stable
     container_name: prysm
     network_mode: host
     user: "1000:1000"
@@ -188,6 +1284,8 @@ services:
     ports:
       - 4000:4000
       - 3500:3500
+      - 13000:13000
+      - 12000:12000/udp
     command:
       - --mainnet
       - --accept-terms-of-use
@@ -200,8 +1298,9 @@ services:
       - --grpc-gateway-corsdomain=*
       - --grpc-gateway-host=127.0.0.1
       - --grpc-gateway-port=3500
+      - --p2p-tcp-port=13000
+      - --p2p-udp-port=12000
       - --min-sync-peers=3
-      - --subscribe-all-data-subnets
       - --checkpoint-sync-url=https://mainnet.checkpoint.sigp.io
       - --genesis-beacon-api-url=https://mainnet.checkpoint.sigp.io
     logging:
@@ -211,93 +1310,144 @@ services:
         max-file: "3"
 ```
 
+> [!TIP]
+> La imagen `gcr.io/offchainlabs/prysm/beacon-chain` es la URL oficial actual. Si prefieres fijar una versión exacta en lugar de `:stable` (recomendable en producción para evitar cambios inesperados), consulta la [página de releases de Prysm](https://github.com/OffchainLabs/prysm/releases) y la de [Geth](https://github.com/ethereum/go-ethereum/releases) antes de desplegar.
 
-___
+---
 
-## Step 6. ▶️ Run Geth & Prysm Nodes
+### 8.7 Ejecutar y gestionar los nodos
 
-▶️ Start Geth & Prysm Nodes:
-Starts the Geth and Prysm containers in detached mode (running in the background).
+**Iniciar Geth y Prysm en segundo plano**
+
 ```bash
 docker compose up -d
 ```
 
-🧾 Node Logs
-Continuously displays the real-time logs from both containers.
+**Ver los logs en tiempo real de ambos contenedores**
+
 ```bash
 docker compose logs -f
 ```
-⛔ Stop node. 
-Run `docker compose down` to stop and remove all running Aztec containers before updating.
+
+**Detener y eliminar los contenedores**
+
 ```bash
 docker compose down
 ```
-## Step 7. 🔥 UFW
 
+---
 
-✅ Aplicar reglas UFW:
+### 8.8 Configurar el firewall (UFW)
+
+**Aplicar las reglas necesarias**
 
 ```bash
-# 1. Allow SSH access (only if you use SSH, otherwise omit)
+# 1. Permitir acceso SSH (solo si usas SSH, si no, omite esta línea)
 sudo ufw allow OpenSSH
 
-# 2. Allow P2P traffic required for Geth P2P, Geth P2P, Prysm P2P, Prysm gossip/block sync
+# 2. Permitir tráfico P2P necesario: Geth P2P (TCP/UDP) y Prysm P2P/gossip
+sudo ufw allow 30303/tcp
+sudo ufw allow 30303/udp
+sudo ufw allow 13000/tcp
+sudo ufw allow 12000/udp
 
-sudo ufw allow 30303/tcp      
-sudo ufw allow 30303/udp      
-sudo ufw allow 13000/tcp     
-sudo ufw allow 12000/udp      
-
-# 3. Default policy: deny incoming traffic
+# 3. Política por defecto: denegar entrante
 sudo ufw default deny incoming
 
-# 4. Allow outgoing traffic
+# 4. Permitir saliente
 sudo ufw default allow outgoing
 
-# 5. Enable the firewall
+# 5. Activar el firewall
 sudo ufw enable
-
 ```
 
-Used Ports 
+**Ver puertos en uso**
+
 ```bash
 sudo ss -tulnp
 ```
-UFW rules
+
+**Ver las reglas activas de UFW**
+
 ```bash
 sudo ufw status verbose
 ```
 
-___
+---
 
+## 🌳 9. Aztec Prover — Broker + Agents
 
+> Despliegue distribuido de un prover de Aztec en arquitectura separada: un nodo "Broker" (prover-node + prover-broker) y uno o varios nodos "Agent" (prover-agent) dedicados al cómputo intensivo.
 
-Split-architecture configuration.
-   
-You'll need two servers: (these are my specifications for optimal performance)
-Broker Box : 48 cores, 256 GB RAM, NVMe
-Main Rig (Agents) : 64 - 192 cores, 256 – 768 GB RAM, NVMe ( I used a 2x EPYC 96 Cores = 192 cores in total)
+> [!NOTE]
+> ✅ **Verificado (28 jun 2026) contra la documentación oficial — Alpha (mainnet) v4.3.1**
+> Fuente principal: [docs.aztec.network/operate/operators/setup/running_a_prover](https://docs.aztec.network/operate/operators/setup/running_a_prover) y [Prerequisites](https://docs.aztec.network/operate/operators/prerequisites)
+>
+> Cambios relevantes respecto a guías de comunidad antiguas (incluida `alpha-testnet` y la imagen `:latest`):
+> - La imagen oficial actual es **`aztecprotocol/aztec:4.3.1`**, no `:latest`. La propia documentación advierte: *"Always refer to the docs to check that you're using the correct image"*.
+> - El flag de red para producción es **`--network mainnet`** (no `alpha-testnet`, que es la red de pruebas).
+> - El puerto oficial del broker es **8080** (variable `PROVER_BROKER_PORT`), no 8081.
+> - Existe un puerto admin **8880** que la documentación indica explícitamente **no expone nunca** al host por motivos de seguridad.
+>
+> ⚠️ **Nota sobre hardware**: los requisitos de "Broker Box" (48 cores/256GB) y "Main Rig" (192 cores/256-768GB) que puedas tener en guías de comunidad **no son cifras oficiales de Aztec** — son configuraciones prácticas de operadores. Los mínimos oficiales se detallan en 9.1.
 
-Open required ports on Broker Box:
-8081 (TCP)
-40400 (TCP & UDP)
+### 9.1 Arquitectura y requisitos mínimos oficiales
 
+El prover de Aztec consta de tres componentes:
 
-___
+1. **Prover node**: sondea L1 en busca de épocas sin probar, crea los trabajos de prueba, los distribuye al broker y publica la prueba final del rollup en el contrato L1.
+2. **Prover broker**: gestiona la cola de trabajos, distribuyéndolos a los agentes y recolectando resultados.
+3. **Prover agent(s)**: ejecutan los trabajos de generación de pruebas de forma stateless (sin estado).
 
-#   🚀 Step 1. Set Up the Broker Node
-This server will run two roles:
+**Requisitos mínimos oficiales por componente:**
 
-Prover Broker → coordinates and assigns jobs to agents
-Prover Node → fetches jobs, generates partial proofs, and submits final proofs
+| Componente | CPU | RAM | Almacenamiento | Red |
+|---|---|---|---|---|
+| Prover Node | 16 cores / 32 vCPU (2015+) | 16 GB | 1 TB NVMe SSD | 25 Mbps |
+| Prover Broker | 8 cores / 16 vCPU (2015+) | 16 GB | 10 GB SSD | — |
+| Prover Agent (c/u) | 32 cores / 64 vCPU (2015+) | 128 GB | 10 GB SSD | — |
 
+**Escalado de agentes en una misma máquina** (ajustando `PROVER_AGENT_COUNT`):
 
-___
+| Nº de agentes | Cores necesarios | RAM necesaria |
+|---|---|---|
+| 2 agentes | 64 cores | 256 GB |
+| 3 agentes | 96 cores | 384 GB |
+| 4 agentes | 128 cores | 512 GB |
 
+> Estos requisitos están sujetos a cambios según crezca el throughput de la red.
 
-### 🧱 Install Essentials
+---
 
-On the Broker NODE (48c/256 GB), update and install the required packages:
+### 9.2 Generar la clave del publicador de pruebas
+
+> La clave del publicador (`PROVER_PUBLISHER_PRIVATE_KEY`) se usa para enviar las pruebas a L1. Esta cuenta necesita ETH para pagar el gas.
+
+**Instalar Foundry** (si no lo tienes ya)
+
+```bash
+curl -L https://foundry.paradigm.xyz | bash
+```
+
+Más detalles en [getfoundry.sh](https://getfoundry.sh/).
+
+**Generar una nueva clave privada de Ethereum con mnemotécnico de 24 palabras**
+
+```bash
+cast wallet new-mnemonic --words 24
+```
+
+> [!CAUTION]
+> Guarda la frase mnemotécnica y la clave privada en un lugar seguro (gestor de contraseñas o almacenamiento offline). La clave privada se usará en `PROVER_PUBLISHER_PRIVATE_KEY` y la dirección derivada en `PROVER_ID`. Esta cuenta debe estar fondeada con ETH para pagar el gas de publicación de pruebas en L1.
+
+---
+
+### 9.3 Configurar el nodo Broker (Prover Node + Prover Broker)
+
+> En la máquina que ejecutará el prover node y el broker (8.1 — la "Broker Box").
+
+**Paso 1 — Instalar dependencias del sistema**
+
 ```bash
 sudo apt update && sudo apt upgrade -y && \
 sudo apt install -y \
@@ -316,170 +1466,143 @@ sudo apt install -y \
     software-properties-common
 ```
 
-### 📦 Install dependencies
-```bash
-sudo apt install -y ca-certificates curl gnupg lsb-release
-```
+**Paso 2 — Instalar Docker** (sigue el procedimiento de la sección [8.2](#82-instalar-docker-engine), idéntico para esta máquina)
 
-### 🔐 Add Docker’s official GPG key
+**Paso 3 — Verificar la instalación**
 
-```bash
-sudo mkdir -m 0755 -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
-sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-```
-### 🗂️ Set up repository
-
-```bash
-echo \
-  "deb [arch=$(dpkg --print-architecture) \
-  signed-by=/etc/apt/keyrings/docker.gpg] \
-  https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-```
-
-### 🐳 Install Docker Engine & Compose
-```bash
-sudo apt update && \
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
-
-
-### ✅ Verify installation
 ```bash
 docker --version
 docker compose version
 ```
 
-___
-
-##  2️⃣ 📥 Install Aztec CLI
-
-### Run the following command to install the Aztec CLI on your server:
+**Paso 4 — Crear la estructura de directorios**
 
 ```bash
-bash -i <(curl -s https://install.aztec.network)
-```
-### Add the CLI to your shell’s PATH:
-```bash
-echo 'export PATH="$HOME/.aztec/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-```
-### You can verify installation with:
-```bash
-aztec --version 
-```
-### Update AZTEC to latest
-```bash
-aztec-up latest
+mkdir -p aztec-prover-node/prover-node-data aztec-prover-node/prover-broker-data
+cd aztec-prover-node
+touch .env
 ```
 
-___
+**Paso 5 — Configurar las variables de entorno**
 
-##  3️⃣ 📁 Create Prover Directory & Configure Firewall
-
-### 📁 Create the Prover Directory
-
-This will hold your Docker Compose files, ".env", and data volumes:
-```bash
-mkdir -p ~/broker
-cd ~/broker
-```
-### 🔓Allow ports in UFW and enable
-Open the necessary TCP and UDP ports for the broker, prover node, and SSH access:
+Añade a tu archivo `.env`:
 
 ```bash
-sudo ufw allow 22/tcp     
-sudo ufw allow 8080/tcp   
-sudo ufw allow 8081/tcp     
-sudo ufw allow 40400/tcp   
-sudo ufw allow 40400/udp 
-```
-```bash
-sudo ufw enable
-```
-### 🧾 Create a .env file
+# Configuración del Prover Node
+DATA_DIRECTORY=./prover-node-data
+P2P_IP=[tu IP externa]
+P2P_PORT=40400
+ETHEREUM_HOSTS=[tu endpoint de ejecución L1]
+L1_CONSENSUS_HOST_URLS=[tu endpoint de consenso L1]
+LOG_LEVEL=info
+PROVER_BROKER_HOST=http://prover-broker:8080
+PROVER_PUBLISHER_PRIVATE_KEY=[tu clave privada del publicador, ver sección 9.2]
+AZTEC_PORT=8080
+AZTEC_ADMIN_PORT=8880
 
-⚠️ Important: Do NOT reuse the same private key as your Sequencer Node — this will cause nonce conflicts.
-
-```bash
-nano .env
+# Configuración del Prover Broker
+PROVER_BROKER_DATA_DIRECTORY=./prover-broker-data
+PROVER_BROKER_PORT=8080
 ```
-### 📋 Paste content in .env
 
-```bash
-P2P_IP=
-ETHEREUM_HOSTS=
-L1_CONSENSUS_HOST_URLS=
-PROVER_PUBLISHER_PRIVATE_KEY=
-PROVER_ID=
-```
-### 🐳 Create a docker-compose.yml file
+**Paso 6 — Crear el `docker-compose.yml`**
 
-### Create a docker file with
 ```bash
 nano docker-compose.yml
 ```
 
-### 💾 Paste content and save
-```bash
-name: aztec-prover
-services:
-  broker:
-    image: aztecprotocol/aztec:latest
-    command:
-      - node
-      - --no-warnings
-      - /usr/src/yarn-project/aztec/dest/bin/index.js
-      - start
-      - --prover-broker
-      - --network
-      - alpha-testnet
-    environment:
-      DATA_DIRECTORY: /data-broker
-      LOG_LEVEL: info
-      ETHEREUM_HOSTS: ${ETHEREUM_HOSTS}
-      P2P_IP: ${P2P_IP}
-    volumes:
-      - ./data-broker:/data-broker
-    ports:
-      - "8081:8080"   # Expose broker's internal 8080 as external 8081
-    entrypoint: >
-      sh -c 'node --no-warnings /usr/src/yarn-project/aztec/dest/bin/index.js start --network alpha-testnet --prover-broker'
+```yaml
+name: aztec-prover-node
 
+services:
   prover-node:
-    image: aztecprotocol/aztec:latest
+    image: aztecprotocol/aztec:4.3.1
+    entrypoint: >-
+      node
+      --no-warnings
+      /usr/src/yarn-project/aztec/dest/bin/index.js
+      start
+      --prover-node
+      --archiver
+      --network mainnet
     depends_on:
-      - broker
+      prover-broker:
+        condition: service_started
+        required: true
     environment:
-      P2P_ENABLED: "true"
-      DATA_DIRECTORY: /data-prover
-      P2P_IP: ${P2P_IP}
-      DATA_STORE_MAP_SIZE_KB: "134217728"
+      DATA_DIRECTORY: /var/lib/data
       ETHEREUM_HOSTS: ${ETHEREUM_HOSTS}
       L1_CONSENSUS_HOST_URLS: ${L1_CONSENSUS_HOST_URLS}
-      LOG_LEVEL: info
-      PROVER_BROKER_HOST: http://broker:8080  # within docker network
+      LOG_LEVEL: ${LOG_LEVEL}
+      PROVER_BROKER_HOST: ${PROVER_BROKER_HOST}
       PROVER_PUBLISHER_PRIVATE_KEY: ${PROVER_PUBLISHER_PRIVATE_KEY}
-    volumes:
-      - ./data-prover:/data-prover
+      P2P_IP: ${P2P_IP}
+      P2P_PORT: ${P2P_PORT}
+      AZTEC_PORT: ${AZTEC_PORT}
+      AZTEC_ADMIN_PORT: ${AZTEC_ADMIN_PORT}
     ports:
-      - "40400:40400"
-      - "40400:40400/udp"
-    entrypoint: >
-      sh -c 'node --no-warnings /usr/src/yarn-project/aztec/dest/bin/index.js start --network alpha-testnet --archiver --prover-node'
+      - ${AZTEC_PORT}:${AZTEC_PORT}
+      - ${P2P_PORT}:${P2P_PORT}
+      - ${P2P_PORT}:${P2P_PORT}/udp
+    volumes:
+      - ${DATA_DIRECTORY}:/var/lib/data
+    restart: unless-stopped
+
+  prover-broker:
+    image: aztecprotocol/aztec:4.3.1
+    entrypoint: >-
+      node
+      --no-warnings
+      /usr/src/yarn-project/aztec/dest/bin/index.js
+      start
+      --prover-broker
+      --network mainnet
+    environment:
+      DATA_DIRECTORY: /var/lib/data
+      ETHEREUM_HOSTS: ${ETHEREUM_HOSTS}
+      P2P_IP: ${P2P_IP}
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - ${PROVER_BROKER_PORT}:8080
+    volumes:
+      - ${PROVER_BROKER_DATA_DIRECTORY}:/var/lib/data
+    restart: unless-stopped
 ```
 
-___
+> [!IMPORTANT]
+> **Seguridad — puerto admin no expuesto**: el puerto admin (8880) se omite intencionadamente del mapeo de `ports` por seguridad. La API admin permite operaciones sensibles (cambios de configuración, rollbacks de base de datos) que nunca deben ser accesibles desde fuera del contenedor. Si necesitas usarla, hazlo vía `docker exec`:
+>
+> ```bash
+> docker exec -it prover-node curl -X POST http://localhost:8880 \
+>   -H 'Content-Type: application/json' \
+>   -d '{"jsonrpc":"2.0","method":"nodeAdmin_getConfig","params":[],"id":1}'
+> ```
+>
+> El broker expone el puerto 8080 para que sea accesible desde las máquinas de los agentes — asegúrate de que ese puerto es alcanzable desde ellas.
 
-# 🧠 Step 2 — Set Up the Agents (Main Prover Rig)
- 
-This server will run Prover Agents only, connecting to the Broker to receive proving jobs. [Remember,this is the NODE with 256GB+ RAMS]. 
+**Paso 7 — Configurar el firewall**
 
-### 1️⃣ Install Essentials
+```bash
+sudo ufw allow 22/tcp
+sudo ufw allow 8080/tcp
+sudo ufw allow 40400/tcp
+sudo ufw allow 40400/udp
+sudo ufw enable
+```
 
-Update and install required packages:
+**Paso 8 — Iniciar el broker y el prover node**
+
+```bash
+docker compose up -d
+```
+
+---
+
+### 9.4 Configurar los nodos Agent
+
+> En cada máquina dedicada a ejecutar agentes de prueba (las máquinas de alto rendimiento — "Main Rig").
+
+**Paso 1 — Instalar dependencias del sistema**
 
 ```bash
 sudo apt update && sudo apt upgrade -y && \
@@ -498,197 +1621,160 @@ sudo apt install -y \
     net-tools \
     software-properties-common
 ```
-### 2️⃣ 🐳 Install Docker & Docker Compose
 
+**Paso 2 — Instalar Docker** (sección [8.2](#82-instalar-docker-engine))
 
-```bash
-sudo apt install -y ca-certificates curl gnupg lsb-release
-sudo mkdir -m 0755 -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
-sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
-
-echo \
-  "deb [arch=$(dpkg --print-architecture) \
-  signed-by=/etc/apt/keyrings/docker.gpg] \
-  https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-
-sudo apt update && \
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
-
-### ✅ Verify installation
+**Paso 3 — Verificar la instalación**
 
 ```bash
 docker --version
 docker compose version
 ```
 
-### 3️⃣ Create Agents Directory & Configure Firewall
+**Paso 4 — Crear el directorio de trabajo**
 
 ```bash
-mkdir -p ~/agents
-cd ~/agents
+mkdir aztec-prover-agent
+cd aztec-prover-agent
+touch .env
 ```
 
-### 🔥 Allow required ports for agent communication
+**Paso 5 — Configurar las variables de entorno**
+
+> [!TIP]
+> Ajusta `PROVER_AGENT_COUNT` según el hardware real de la máquina, siguiendo la tabla de escalado de la sección 9.1: 64 cores/256 GB → 2 agentes; 96 cores/384 GB → 3 agentes; 128 cores/512 GB → 4 agentes.
 
 ```bash
-sudo ufw allow 22/tcp    
-sudo ufw allow out 8081/tcp
+PROVER_AGENT_COUNT=1
+PROVER_AGENT_POLL_INTERVAL_MS=10000
+PROVER_BROKER_HOST=http://[IP_DE_LA_MAQUINA_BROKER]:8080
+PROVER_ID=[dirección correspondiente a PROVER_PUBLISHER_PRIVATE_KEY]
 ```
 
+Sustituye `[IP_DE_LA_MAQUINA_BROKER]` por la IP real de la máquina que ejecuta el broker.
 
-### 4️⃣ Create .env File
+**Prueba de conectividad antes de arrancar:**
 
 ```bash
-nano .env
+curl http://[IP_DE_LA_MAQUINA_BROKER]:8080
 ```
 
-### Paste content in .env
+Si falla, revisa la configuración de red, las reglas de firewall, y que el broker esté efectivamente en ejecución.
 
-```bash
-PROVER_ID=0xAddress
-PROVER_BROKER_HOST=http://<broker_public_ip>
-BROKER_IP=IPAddressoftheBrokerNode
-AGENT_COUNT=30
-```
-
-
-___
-
-
-### Agents `.env` Variables
-
-- `BROKER_IP`
-The public IP address of your Broker (where prover-node and broker are running).
-Agents use this to locate the broker for job requests.
-
-
-- `AGENT_COUNT`
-The number of agent processes to run in parallel.
-Example: On a 192-core server, 25-30 agents is optimal.
-
-- `PROVER_ID`
-The public prover address linked to your PROVER_PUBLISHER_PRIVATE_KEY on the broker.
-
-- `PROVER_BROKER_HOST`
-The full connection URL to your broker, including the port.
-Example: http://<BROKER_IP>:8081
-
-___
-
-
-### 🐳Create a docker file with
+**Paso 6 — Crear el `docker-compose.yml`**
 
 ```bash
 nano docker-compose.yml
 ```
 
-### 🐳 Paste on the docker compose of Agent
-```bash
-name: aztec-agent-only
+```yaml
+name: aztec-prover-agent
+
 services:
-  agent:
-    image: aztecprotocol/aztec:latest
-    command:
-      - node
-      - --no-warnings
-      - /usr/src/yarn-project/aztec/dest/bin/index.js
-      - start
-      - --prover-agent
-      - --network
-      - alpha-testnet
+  prover-agent:
+    image: aztecprotocol/aztec:4.3.1
+    entrypoint: >-
+      node
+      --no-warnings
+      /usr/src/yarn-project/aztec/dest/bin/index.js
+      start
+      --prover-agent
+      --network mainnet
     environment:
-      PROVER_AGENT_COUNT: ${AGENT_COUNT:-30}
-      PROVER_AGENT_POLL_INTERVAL_MS: "10000"
-      PROVER_BROKER_HOST: http://${BROKER_IP}:8081
+      PROVER_AGENT_COUNT: ${PROVER_AGENT_COUNT}
+      PROVER_AGENT_POLL_INTERVAL_MS: ${PROVER_AGENT_POLL_INTERVAL_MS}
+      PROVER_BROKER_HOST: ${PROVER_BROKER_HOST}
       PROVER_ID: ${PROVER_ID}
-    volumes:
-      - ./data-prover:/data-prover
-    entrypoint: >
-      sh -c 'node --no-warnings /usr/src/yarn-project/aztec/dest/bin/index.js start --network alpha-testnet --prover-agent'
-
+    restart: unless-stopped
 ```
 
-___
+**Paso 7 — Configurar el firewall**
 
-## 🚀 Run & Manage
+```bash
+sudo ufw allow 22/tcp
+sudo ufw allow out 8080/tcp
+sudo ufw enable
+```
 
-### ▶️ Then, run the Prover + Broker (the first one)
+**Paso 8 — Iniciar el agente**
 
 ```bash
 docker compose up -d
 ```
 
-### ▶️ Now go to the Agent NODE and also run that too
-```bash
-docker compose up -d
-```
-### ⛔ Stop and remove containers (with volumes)
+**Escalado de capacidad de prueba:**
+- **Horizontal**: añade más máquinas de agentes repitiendo este setup.
+- **Vertical**: incrementa `PROVER_AGENT_COUNT` en máquinas existentes (asegurando hardware suficiente).
+
+---
+
+### 9.5 Verificación y comandos de gestión
+
+**Ver el estado de los contenedores (en cualquier máquina)**
 
 ```bash
-docker compose down -v
+docker compose ps
 ```
 
-### 🔄 Restart
+**Logs del Prover Node**
 
 ```bash
-docker compose down -v && docker compose up -d
+docker compose logs -f prover-node
 ```
 
-___
-
-## 🔧 Useful Commands for Prover+Broker
-
-### 🧾Monitor the Prover logs
+**Logs del Broker**
 
 ```bash
-docker logs -f aztec-prover-prover-node-1
+docker compose logs -f prover-broker
 ```
-### ✅ Check submitted proofs
+
+**Logs de un Agent**
 
 ```bash
-docker logs -f aztec-prover-prover-node-1 2>&1 | grep --line-buffered -E 'Submitted'
+docker compose logs -f prover-agent
 ```
 
-## 🧰 Useful Command for Agents
-
-### 📊 See container status
+**Filtrar logs para ver pruebas enviadas correctamente**
 
 ```bash
-docker ps
+docker compose logs prover-node 2>&1 | grep --line-buffered -E 'Submitted'
 ```
 
-### ⛔ Optional: Stop and remove containers (with volumes)
-```bash
-docker compose down -v
-```
-### 🔄 Restart
-```bash
-docker compose down -v && docker compose up -d
-```
-### 🧾 Monitor Agent logs
-```bash
-docker logs -f aztec-agent-only-agent-1
-```
-### ✅ Check agent-broker connection & job processing
+**Reiniciar el stack completo (broker o agente)**
 
 ```bash
-docker logs -f aztec-agent-only-agent-1 2>&1 | grep --line-buffered -E 'Connected to broker|Received job|Starting job|Submitting result'
+docker compose down && docker compose up -d
 ```
 
-___
+---
 
+### 9.6 Resolución de problemas habituales
 
-## 🛠 Extra Tooling for Monitoring
+**Problema: el agente no puede conectar con el broker**
 
-It’s recommended to install some additional tools for monitoring your prover and agent servers.
+- Verifica que la IP en `PROVER_BROKER_HOST` es correcta.
+- Comprueba que el puerto 8080 de la máquina broker es accesible desde las máquinas agente.
+- Revisa las reglas de firewall entre máquinas.
+- Prueba la conectividad: `curl http://[IP_BROKER]:8080`
+- Verifica que el contenedor del broker está corriendo: `docker compose ps`
 
-### 📈Install "bpytop" (system resource monitor)
+**Problema: el agente se cae o rinde mal**
+
+- Verifica que el hardware cumple los mínimos oficiales (32 cores y 128 GB RAM por agente).
+- Comprueba el uso de recursos: `docker stats`
+- Reduce `PROVER_AGENT_COUNT` si corres varios agentes en la misma máquina.
+
+**Problema: el agente no recibe trabajos**
+
+- Verifica que el broker está recibiendo trabajos del prover node.
+- Confirma que `PROVER_ID` coincide con la dirección del publicador.
+- Prueba la conectividad con el broker: `curl http://[IP_BROKER]:8080`
+
+---
+
+### 9.7 Herramientas adicionales de monitorización para provers
+
+**Instalar `bpytop` (monitor de recursos del sistema con interfaz visual)**
 
 ```bash
 sudo apt update
@@ -696,21 +1782,33 @@ sudo apt install -y python3-pip
 sudo pip3 install bpytop
 ```
 
-### ▶️ Run
+**Ejecutar**
 
 ```bash
 bpytop
 ```
 
+---
 
+### 9.8 Recursos oficiales y de comunidad
 
+> [!NOTE]
+> Los siguientes enlaces los aportaste tú; los marco como **comunidad** (no documentación oficial de Aztec Labs), salvo el primero que sí es la doc oficial.
 
+- **Documentación oficial de Aztec**: [docs.aztec.network](https://docs.aztec.network)
+- Estadísticas de provers (comunidad): [dune.com/rhum/aztec-nb-proofs-tx-new-rollup](https://dune.com/rhum/aztec-nb-proofs-tx-new-rollup)
+- Bot de Telegram para provers (comunidad): [t.me/Aztec_prover_bot](https://t.me/Aztec_prover_bot)
+- Explorador de provers (comunidad): [aztec-prover-client.vercel.app](https://aztec-prover-client.vercel.app/)
+- Alquiler de cómputo (proveedor externo): [hostkey.com](https://hostkey.com/dedicated-servers/instant/)
 
+---
 
+<div align="center">
 
+**📌 Repositorio de referencia personal — comandos verificados en Ubuntu 24.04 / macOS / WSL2**
+**⟠ Sección de nodos blockchain verificada contra documentación oficial el 28 de junio de 2026 — comprobar siempre la versión vigente antes de desplegar en mainnet**
 
+⭐ Si te resulta útil, considera dejar una estrella al repositorio
 
-
-
-
+</div>
 
